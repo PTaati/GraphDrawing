@@ -15,6 +15,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -324,21 +325,41 @@ public class GraphDrawing extends JFrame implements MouseListener, MouseMotionLi
             }
         }
     }
+    BufferedImage grid = null;
     public void draw() {
-        clear();
+        
 
         Graphics2D g = (Graphics2D) c.getGraphics();
         g.setFont(sanSerifFont);
-
-        for (Edge_ t : Edge_s) {
-            t.draw(g);
+        
+        if(grid==null){
+            grid = (BufferedImage)createImage(c.getWidth(),c.getHeight());
         }
+        
+        Graphics2D g2 = grid.createGraphics();
+        
+        g2.setColor(Color.white);
+        g2.fillRect(0, 0, getWidth(), getHeight());
+        
+        for (Edge_ t : Edge_s) {
+            t.draw(g2);
+        }
+        
         if (TempEdge != null) {
-            TempEdge.line(g);
+            TempEdge.line(g2);
         }
         for (Vertex s : Vertexs) {
-            s.draw(g);
+            s.draw(g2);
         }
+
+        for (Edge_ t : Edge_s) {
+            t.color = Color.BLACK;
+        }
+       // clear();
+        
+        g.drawImage(grid, null, 0, 0);
+        //drawall
+
     }
 
 ////////////////////////////////  UI EVENT  ////////////////////////////////
